@@ -1,0 +1,84 @@
+﻿@page "/books"
+@using BookstoreBlazorApp.Data
+@inject BookService BookService
+@inject BookstoreBlazorApp.Data.NotificationService NotificationService
+
+<h3>Books</h3>
+
+<Notification />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Price</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in BookService.GetBooks())
+        {
+            <tr>
+                <td>@book.Title</td>
+                <td>@book.Author</td>
+                <td>@book.Price.ToString("C")</td>
+                <td>
+                    <button @onclick="() => EditBook(book.Id)">Edit</button>
+                    <button @onclick="() => DeleteBook(book.Id)">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<button @onclick="AddNewBook">Add New Book</button>
+
+@if (showEditDialog)
+{
+    <EditBookDialog Book="selectedBook" OnSave="SaveBook" OnCancel="CancelEdit" />
+}
+
+@code {
+    private bool showEditDialog = false;
+    private Book selectedBook = new Book();
+
+    private void AddNewBook()
+    {
+        selectedBook = new Book();
+        showEditDialog = true;
+    }
+
+    private void EditBook(int id)
+    {
+        selectedBook = BookService.GetBookById(id);
+        showEditDialog = true;
+    }
+
+    private async Task SaveBook(Book book)
+    {
+        if (book.Id == 0)
+        {
+            BookService.AddBook(book);
+            await NotificationService.NotifyAsync($"Book '{book.Title}' added successfully!");
+        }
+        else
+        {
+            BookService.UpdateBook(book);
+            await NotificationService.NotifyAsync($"Book '{book.Title}' updated successfully!");
+        }
+        showEditDialog = false;
+    }
+
+    private async Task DeleteBook(int id)
+    {
+        var book = BookService.GetBookById(id); // Fetch the book to get its title
+        BookService.DeleteBook(id);
+        await NotificationService.NotifyAsync($"Book '{book?.Title ?? "Unknown"}' deleted successfully!");
+    }
+
+    private void CancelEdit()
+    {
+        showEditDialog = false;
+    }
+}

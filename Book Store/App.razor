@@ -1,0 +1,15 @@
+﻿<Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+    </Found>
+    <NotFound>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p>Hello!</p>
+            <p>Welcome to this simple CRUD Web Application project named 'Book Store'.</p>
+            <p>This project built using ASP.NET Core, which is a popular framework for creating modern web applications.  </p>
+            <p>It uses Blazor, a feature of ASP.NET Core that allows developers to build interactive web UIs with C# instead of JavaScript.</p>
+            <p>You can view a list of books (with titles, authors, and prices), and it includes basic functionality to add, edit, or delete books.</p>
+            <p></p>
+        </LayoutView>
+    </NotFound>
+</Router>

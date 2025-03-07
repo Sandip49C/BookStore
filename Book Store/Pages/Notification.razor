@@ -1,0 +1,31 @@
+﻿@inject BookstoreBlazorApp.Data.NotificationService NotificationService
+
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-info" role="alert">
+        @message
+    </div>
+}
+
+@code {
+    private string message = "";
+
+    protected override void OnInitialized()
+    {
+        NotificationService.OnNotify += ShowNotification;
+    }
+
+    private async Task ShowNotification(string msg)
+    {
+        message = msg;
+        StateHasChanged();
+        await Task.Delay(3000);
+        message = "";
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        NotificationService.OnNotify -= ShowNotification;
+    }
+}

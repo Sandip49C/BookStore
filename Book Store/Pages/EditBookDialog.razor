@@ -1,0 +1,43 @@
+﻿@using BookstoreBlazorApp.Data
+
+<h3>Edit Book</h3>
+
+<div class="dialog">
+    <div>
+        <label>Title:</label>
+        <input @bind="Book.Title" />
+    </div>
+    <div>
+        <label>Author:</label>
+        <input @bind="Book.Author" />
+    </div>
+    <div>
+        <label>Price:</label>
+        <input @bind="Book.Price" type="number" />
+    </div>
+    <div>
+        <button @onclick="Save">Save</button>
+        <button @onclick="Cancel">Cancel</button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Book Book { get; set; }
+
+    [Parameter]
+    public EventCallback<Book> OnSave { get; set; }
+
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+
+    private void Save()
+    {
+        OnSave.InvokeAsync(Book);
+    }
+
+    private void Cancel()
+    {
+        OnCancel.InvokeAsync();
+    }
+}
